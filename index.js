@@ -1,6 +1,8 @@
+//const { createElement } = require("react");
+
 // === Constants ===
-const BASE = "https://fsa-crud-2aa9294fe819.herokuapp.com/api";
-const COHORT = ""; // Make sure to change this!
+const BASE = "https://fsa-crud-2aa9294fe819.herokuapp.com/api/";
+const COHORT = "ZacharyVadnais"; 
 const API = BASE + COHORT;
 
 // === State ===
@@ -58,6 +60,109 @@ async function getGuests() {
 }
 
 // === Components ===
+function partyForm(){
+
+  const form = document.createElement("form");
+//==name input
+  const nameLabel = document.createElement("label");
+  nameLabel.textContent = "Your Name:";
+  const nameInput = document.createElement("input");
+  nameInput.type = "text";
+  nameInput.name = "Name";
+  form.appendChild(nameLabel);
+  form.appendChild(nameInput);
+
+//==description input
+
+  const descrLabel = document.createElement("label");
+  descrLabel.textContent = "Your Description:"
+  const descrInput = document.createElement("textarea");
+  descrInput.textContent = ""
+  form.appendChild(descrLabel);
+  form.appendChild(descrInput);
+
+//==party guests
+ const guestLabel = document.createElement("label");
+ guestLabel.textContent = " Who's Joining The Party?";
+ const guestInput = document.createElement("input");
+ guestInput.type = "text";
+ guestInput.name = "guests";
+ form.appendChild(guestLabel);
+ form.appendChild(guestInput);
+
+
+//==date input
+  const dateLabel = document.createElement("label");
+  dateLabel.textContent = "Today's Date:";
+  const dateInput = document.createElement("input");
+  dateInput.type = "date"
+  dateInput.name = "date"
+  form.appendChild(dateLabel);
+  form.appendChild(dateInput);
+
+//==Location input
+  const locLabel = document.createElement("label");
+  locLabel.textContent = "Next Party Location:";
+  const locInput = document.createElement("Input");
+  locInput.type = "text";
+  locInput.name = "location";
+  form.appendChild(locLabel);
+  form.appendChild(locInput);
+
+//==submit button
+const submitButton = document.createElement("button");
+submitButton.type = "submit";
+submitButton.textContent = "submit";
+form.appendChild(submitButton);
+
+document.body.appendChild(form);
+
+form.addEventListener("submit", async(event) => {
+ event.preventDefault();
+
+const name = nameInput.value.trim();
+const description = descrInput.value.trim();
+const location = locInput.value.trim();
+const date = new Date(dateInput.value).toISOString();
+const guestList = guestInput.value.trim();
+
+if(!rawDate) {
+  alert("Please Choose A Date. Thank you!");
+  return;
+}
+const isoDate = new Date(rawDate).toISOString();
+
+const newParty = {
+  name,
+  description,
+  location,
+  date: isoDate
+};
+
+  try{
+    const responce = await fetch("https://fsa-crud-2aa9294fe819.herokuapp.com/api/ZacharyVadnais/events", {
+      method:"POST",
+      headers: {
+      "Content-Type": "application/json"
+    },
+      body: JSON.stringify(newParty)
+    });  
+      const result = await responce.json();
+      console.log("You Created A Party!!",result);
+
+    form.reset();
+    await getParties();
+
+  }catch(error){
+    console.error("failed to create party. sorry try again!", error);
+  }
+  });
+
+
+
+
+}
+partyForm();
 
 /** Party name that shows more details about the party when clicked */
 function PartyListItem(party) {
